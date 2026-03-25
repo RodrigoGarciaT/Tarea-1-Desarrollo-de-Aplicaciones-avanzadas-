@@ -1,9 +1,9 @@
 #include "Stack.h"
 #include <iostream>
 #include <random>
+#include <stack>
 #include <stdexcept>
 #include <string>
-#include <vector>
 using namespace std;
 
 static void check(bool cond, const string& msg) {
@@ -39,13 +39,15 @@ void runStackTests() {
     } catch (const runtime_error&) {
         // ok
     }
+
+    cout << "[Stack] basic tests PASSED\n";
 }
 
 void runRandomStackStressTests() {
     const int OPS = 10000;
 
     Stack<int> st;
-    vector<int> ref;
+    stack<int> ref;
 
     mt19937_64 rng(123456789ULL);
     uniform_int_distribution<int> valDist(-1000000, 1000000);
@@ -59,22 +61,22 @@ void runRandomStackStressTests() {
             // Solo operaciones validas cuando el stack esta vacio.
             if (op == 0) {
                 st.push(x);
-                ref.push_back(x);
+                ref.push(x);
             }
         } else {
             switch (op) {
                 case 0: { // push
                     st.push(x);
-                    ref.push_back(x);
+                    ref.push(x);
                     break;
                 }
                 case 1: { // pop
                     st.pop();
-                    ref.pop_back();
+                    ref.pop();
                     break;
                 }
                 case 2: { // top
-                    check(st.top() == ref.back(), "Stack top mismatch");
+                    check(st.top() == ref.top(), "Stack top mismatch");
                     break;
                 }
                 case 3: { // size
@@ -93,15 +95,15 @@ void runRandomStackStressTests() {
         check(st.isEmpty() == ref.empty(), "Stack isEmpty mismatch after op");
 
         if (!ref.empty()) {
-            check(st.top() == ref.back(), "Stack top mismatch after op");
+            check(st.top() == ref.top(), "Stack top mismatch after op");
         }
     }
 
     // Vaciar completamente y verificar.
     while (!ref.empty()) {
-        check(st.top() == ref.back(), "Final top mismatch");
+        check(st.top() == ref.top(), "Final top mismatch");
         st.pop();
-        ref.pop_back();
+        ref.pop();
     }
 
     check(ref.empty() && st.isEmpty(), "Final stack should be empty");

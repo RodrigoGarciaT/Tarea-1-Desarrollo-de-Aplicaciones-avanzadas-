@@ -60,6 +60,8 @@ void runHashTableTests() {
     table.clear();
     check(table.empty(), "Table should be empty after clear()");
     check(table.size() == 0, "Size should be 0 after clear()");
+
+    cout << "[HashTable] basic tests PASSED\n";
 }
 
 void runRandomHashTableStressTests() {
@@ -71,7 +73,7 @@ void runRandomHashTableStressTests() {
     mt19937_64 rng(192837465ULL);
     uniform_int_distribution<int> keyDist(-50000, 50000);
     uniform_int_distribution<int> valDist(-1000000, 1000000);
-    uniform_int_distribution<int> opDist(0, 8);
+    uniform_int_distribution<int> opDist(0, 9);
 
     for (int i = 0; i < OPS; ++i) {
         int op = opDist(rng);
@@ -119,6 +121,7 @@ void runRandomHashTableStressTests() {
             case 5: { // operator[]
                 table[key] = value;
                 ref[key] = value;
+                check(table[key] == ref[key], "HashTable operator[] write mismatch");
                 break;
             }
             case 6: { // size
@@ -134,6 +137,12 @@ void runRandomHashTableStressTests() {
                 ref.clear();
                 break;
             }
+            case 9: { // operator[] read access (inserta default si no existe)
+                int v1 = table[key];
+                int v2 = ref[key];
+                check(v1 == v2, "HashTable operator[] read mismatch");
+                break;
+            }
         }
 
         // Verificacion consistente en cada iteracion.
@@ -145,6 +154,7 @@ void runRandomHashTableStressTests() {
             int anyKey = ref.begin()->first;
             check(table.contains(anyKey) == true, "HashTable contains(anyKey) should be true");
             check(table.at(anyKey) == ref[anyKey], "HashTable at(anyKey) mismatch");
+            check(table[anyKey] == ref[anyKey], "HashTable operator[](anyKey) mismatch");
 
             int* p = table.get(anyKey);
             check(p != nullptr, "HashTable get(anyKey) should not be nullptr");

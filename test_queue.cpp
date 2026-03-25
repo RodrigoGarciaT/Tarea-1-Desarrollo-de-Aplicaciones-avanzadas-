@@ -1,6 +1,6 @@
 #include "Queue.h"
-#include <deque>
 #include <iostream>
+#include <queue>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -38,13 +38,15 @@ void runQueueTests() {
     } catch (const runtime_error&) {
         // ok
     }
+
+    cout << "[Queue] basic tests PASSED\n";
 }
 
 void runRandomQueueStressTests() {
     const int OPS = 10000;
 
     Queue<int> q;
-    deque<int> ref;
+    queue<int> ref;
 
     mt19937_64 rng(987654321ULL);
     uniform_int_distribution<int> valDist(-1000000, 1000000);
@@ -58,7 +60,7 @@ void runRandomQueueStressTests() {
             // Solo operaciones validas cuando la cola esta vacia.
             if (op == 0) {
                 q.push(x);
-                ref.push_back(x);
+                ref.push(x);
             } else {
                 // Cuando esta vacia: no debe poder pedir front/pop.
                 check(q.isEmpty() == true, "Queue should be empty");
@@ -68,13 +70,13 @@ void runRandomQueueStressTests() {
             switch (op) {
                 case 0: { // push (al final)
                     q.push(x);
-                    ref.push_back(x);
+                    ref.push(x);
                     break;
                 }
                 case 1: { // pop (remove del frente)
                     check(q.front() == ref.front(), "Queue front mismatch before pop");
                     q.pop();
-                    ref.pop_front();
+                    ref.pop();
                     break;
                 }
                 case 2: { // front
@@ -103,7 +105,7 @@ void runRandomQueueStressTests() {
     while (!ref.empty()) {
         check(q.front() == ref.front(), "Final queue front mismatch");
         q.pop();
-        ref.pop_front();
+        ref.pop();
     }
 
     check(ref.empty() && q.isEmpty(), "Final queue should be empty");
