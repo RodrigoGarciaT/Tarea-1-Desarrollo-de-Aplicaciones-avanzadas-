@@ -58,3 +58,9 @@ Aparte de las pruebas anteriores, también se utilizaron las implementaciones de
 ## Github:
 
 https://github.com/RodrigoGarciaT/Tarea-1-Desarrollo-de-Aplicaciones-avanzadas-
+
+## Comando para correr las pruebas:
+
+```bash
+g++ -std=c++17 main.cpp test_stack.cpp test_queue.cpp test_hash.cpp -o tests_app && ./tests_app
+```
