@@ -39,12 +39,14 @@ public:
         }
     }
 
+    // Busca la key en la lista del bucket
     Node* find(const K& key) const {
         for (Node* cur = head; cur; cur = cur->next)
             if (cur->key == key) return cur;
         return nullptr;
     }
 
+    // Actualiza si existe o inserta al inicio si no existe
     void upsert(const K& key, const V& value) {
         if (Node* node = find(key)) { node->value = value; return; }
         Node* node = new Node(key, value);
@@ -52,6 +54,7 @@ public:
         head = node;
     }
 
+    // Borra la key de la lista y confirma si se elimino
     bool erase(const K& key) {
         Node** ptr = &head;
         while (*ptr) {
@@ -83,21 +86,25 @@ class HashTable {
 public:
     HashTable(int cap = 1e5) : buckets(cap) {}
 
+    // Inserta o actualiza una key en su bucket
     void insert(const K& key, const V& value) {
         if (!buckets[index(key)].find(key)) count++;
         buckets[index(key)].upsert(key, value);
     }
 
+    // Elimina una key y ajusta el conteo si existe
     bool remove(const K& key) {
         if (buckets[index(key)].erase(key)) { count--; return true; }
         return false;
     }
 
+    // Regresa puntero al valor o nullptr si no existe
     V* get(const K& key) const {
         auto* node = buckets[index(key)].find(key);
         return node ? &node->value : nullptr;
     }
 
+    // Regresa referencia al valor y crea key con default si falta
     V& operator[](const K& key) {
         auto* node = buckets[index(key)].find(key);
         if (!node) {
