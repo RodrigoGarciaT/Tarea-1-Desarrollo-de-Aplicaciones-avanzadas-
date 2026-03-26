@@ -136,13 +136,8 @@ public:
 
     int count_key(const K& key) const { return contains(key) ? 1 : 0; }
 
+    // Regresa referencia al valor, lanza out_of_range si la key no existe
     V& at(const K& key) {
-        auto* node = buckets[index(key)].find(key);
-        if (!node) throw out_of_range("key not found");
-        return node->value;
-    }
-
-    const V& at(const K& key) const {
         auto* node = buckets[index(key)].find(key);
         if (!node) throw out_of_range("key not found");
         return node->value;

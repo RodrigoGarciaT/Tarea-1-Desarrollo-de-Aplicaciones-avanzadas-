@@ -11,35 +11,49 @@ static void check(bool cond, const string& msg) {
 }
 
 void runQueueTests() {
+    cout << "\n============================================================\n";
     cout << "[Queue] tests\n";
+    cout << "============================================================\n\n";
 
     Queue<string> q;
+    cout << "[Queue] creada cola vacia, verificando estado inicial...\n";
     check(q.isEmpty(), "Queue should start empty");
     check(q.size() == 0, "Queue size should be 0");
+    cout << "[Queue] OK: isEmpty=true, size=0\n";
 
+    cout << "[Queue] push('Mundo')\n";
     q.push("Mundo");
+    cout << "[Queue] push('Hola')\n";
     q.push("Hola");
     check(q.size() == 2, "Queue size should be 2");
+    cout << "[Queue] OK: size=2\n";
 
     // Según tu implementación: front apunta al "tail" (FIFO real al hacer pop desde el tail).
     check(q.front() == "Mundo", "front should be 'Mundo'");
+    cout << "[Queue] OK: front()='Mundo'\n";
 
+    cout << "[Queue] pop()\n";
     q.pop();
     check(q.size() == 1, "Queue size should be 1 after pop");
     check(q.front() == "Hola", "front should be 'Hola' after one pop");
+    cout << "[Queue] OK: size=1, front()='Hola'\n";
 
+    cout << "[Queue] pop() para vaciar\n";
     q.pop();
     check(q.isEmpty(), "Queue should be empty after popping all");
+    cout << "[Queue] OK: cola vacia\n";
 
     // Exception on front()
+    cout << "[Queue] verificando excepcion al consultar front() en cola vacia...\n";
     try {
         (void)q.front();
         throw runtime_error("Expected exception not thrown");
     } catch (const runtime_error&) {
         // ok
     }
+    cout << "[Queue] OK: front() en vacio lanza excepcion\n";
 
-    cout << "[Queue] basic tests PASSED\n";
+    cout << "\n[Queue] basic tests PASSED\n";
 }
 
 void runRandomQueueStressTests() {
@@ -109,6 +123,6 @@ void runRandomQueueStressTests() {
     }
 
     check(ref.empty() && q.isEmpty(), "Final queue should be empty");
-    cout << "[Queue] random stress PASSED (" << OPS << " ops)\n";
+    cout << "[Queue] random stress PASSED (" << OPS << " ops)\n\n";
 }
 

@@ -11,36 +11,49 @@ static void check(bool cond, const string& msg) {
 }
 
 void runStackTests() {
+    cout << "\n============================================================\n";
     cout << "[Stack] tests\n";
+    cout << "============================================================\n\n";
 
     Stack<string> st;
+    cout << "[Stack] creado stack vacio, verificando estado inicial...\n";
     check(st.isEmpty(), "Stack should start empty");
     check(st.size() == 0, "Stack size should be 0");
+    cout << "[Stack] OK: isEmpty=true, size=0\n";
 
     // Insertions
+    cout << "[Stack] push('Mundo')\n";
     st.push("Mundo");
+    cout << "[Stack] push('Hola')\n";
     st.push("Hola");
     check(st.size() == 2, "Stack size should be 2");
     check(st.top() == "Hola", "Top should be 'Hola'");
+    cout << "[Stack] OK: size=2, top='Hola'\n";
 
     // Pop
+    cout << "[Stack] pop()\n";
     st.pop();
     check(st.size() == 1, "Stack size should be 1");
     check(st.top() == "Mundo", "Top should be 'Mundo' after pop");
+    cout << "[Stack] OK: size=1, top='Mundo'\n";
 
     // Pop all
+    cout << "[Stack] pop() para vaciar\n";
     st.pop();
     check(st.isEmpty(), "Stack should be empty after popping all");
+    cout << "[Stack] OK: stack vacio\n";
 
     // Exception on top()
+    cout << "[Stack] verificando excepcion al consultar top() en stack vacio...\n";
     try {
         (void)st.top();
         throw runtime_error("Expected exception not thrown");
     } catch (const runtime_error&) {
         // ok
     }
+    cout << "[Stack] OK: top() en vacio lanza excepcion\n";
 
-    cout << "[Stack] basic tests PASSED\n";
+    cout << "\n[Stack] basic tests PASSED\n";
 }
 
 void runRandomStackStressTests() {
@@ -107,6 +120,6 @@ void runRandomStackStressTests() {
     }
 
     check(ref.empty() && st.isEmpty(), "Final stack should be empty");
-    cout << "[Stack] random stress PASSED (" << OPS << " ops)\n";
+    cout << "[Stack] random stress PASSED (" << OPS << " ops)\n\n";
 }
 

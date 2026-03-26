@@ -11,37 +11,66 @@ static void check(bool cond, const string& msg) {
 }
 
 void runHashTableTests() {
+    cout << "\n============================================================\n";
     cout << "[HashTable] tests\n";
+    cout << "============================================================\n\n";
 
     HashTable<int, string> table(32);
+    cout << "[HashTable] creada tabla con capacidad 32, verificando estado inicial...\n";
     check(table.empty(), "HashTable should start empty");
     check(table.size() == 0, "HashTable size should start at 0");
+    cout << "[HashTable] OK: empty=true, size=0\n";
 
+    cout << "[HashTable] insert(1, 'one')\n";
     table.insert(1, "one");
+    cout << "[HashTable] insert(2, 'two')\n";
     table.insert(2, "two");
+    cout << "[HashTable] insert(3, 'three')\n";
     table.insert(3, "three");
+    cout << "[HashTable] insert(2, 'TWO') para actualizar\n";
     table.insert(2, "TWO"); // update
+    cout << "[HashTable] table[300] = 'yolo'\n";
     table[300] = "yolo";
 
     check(table.contains(2), "Should contain key 2");
     check(table.at(2) == "TWO", "Key 2 should be updated to 'TWO'");
     check(table.at(300) == "yolo", "operator[] should insert missing keys");
+    cout << "[HashTable] OK: llave 2 actualizada a 'TWO' y llave 300 contiene 'yolo'\n";
 
     check(table.get(1) != nullptr, "get(1) should not be null");
     check(*table.get(1) == "one", "get(1) should return 'one'");
     check(table.get(999) == nullptr, "get(999) should be null");
+    cout << "[HashTable] OK: get(1)='one' y get(999)=nullptr\n";
 
     check(table.size() == 4, "Size should be 4 after inserts (1,2,3,300)");
+    cout << "[HashTable] OK: size=4\n";
 
+    cout << "[HashTable] remove(3)\n";
     table.remove(3);
     check(!table.contains(3), "Key 3 should be removed");
     check(table.size() == 3, "Size should be 3 after removing key 3");
+    cout << "[HashTable] OK: llave 3 eliminada, size=3\n";
 
     // operator[] access (insert missing keys)
+    cout << "[HashTable] table[10]='ten' y table[20]='twenty'\n";
     table[10] = "ten";
     table[20] = "twenty";
     check(table.at(10) == "ten", "Key 10 should be 'ten'");
     check(table.at(20) == "twenty", "Key 20 should be 'twenty'");
+    cout << "[HashTable] OK: llaves 10 y 20 insertadas correctamente\n";
+
+    // operator[] read/insert/update semantics
+    cout << "[HashTable] probando operator[] con llave inexistente (400)...\n";
+    int beforeSize = table.size();
+    string defaultValue = table[400];
+    check(defaultValue == "", "operator[] should default-insert empty string");
+    check(table.size() == beforeSize + 1, "Size should increase after default insertion via operator[]");
+
+    cout << "[HashTable] actualizando table[400]='cuatrocientos'\n";
+    table[400] = "cuatrocientos";
+    check(table[400] == "cuatrocientos", "operator[] should return updated value");
+    check(table.size() == beforeSize + 1, "Size should not increase when updating existing key via operator[]");
+    cout << "[HashTable] OK: operator[] inserta default y actualiza sin agregar a size\n";
 
     // empty, count, at, clear
     check(!table.empty(), "Table should not be empty yet");
@@ -49,19 +78,24 @@ void runHashTableTests() {
     check(table.count_key(99) == 0, "count_key(99) should be 0");
 
     check(table.at(1) == "one", "at(1) should be 'one'");
+    cout << "[HashTable] OK: at(1)='one'\n";
 
+    cout << "[HashTable] verificando excepcion con at(99)...\n";
     try {
         table.at(99);
         throw runtime_error("Expected out_of_range not thrown");
     } catch (const out_of_range&) {
         // ok
     }
+    cout << "[HashTable] OK: at(99) lanza out_of_range\n";
 
+    cout << "[HashTable] clear()\n";
     table.clear();
     check(table.empty(), "Table should be empty after clear()");
     check(table.size() == 0, "Size should be 0 after clear()");
+    cout << "[HashTable] OK: tabla vacia tras clear()\n";
 
-    cout << "[HashTable] basic tests PASSED\n";
+    cout << "\n[HashTable] basic tests PASSED\n";
 }
 
 void runRandomHashTableStressTests() {
@@ -166,6 +200,6 @@ void runRandomHashTableStressTests() {
     table.clear();
     ref.clear();
     check(table.empty() && ref.empty(), "Final hash table should be empty");
-    cout << "[HashTable] random stress PASSED (" << OPS << " ops)\n";
+    cout << "[HashTable] random stress PASSED (" << OPS << " ops)\n\n";
 }
 
